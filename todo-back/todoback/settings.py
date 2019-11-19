@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 """
 
 import os
+import datetime
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -31,6 +32,12 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'todos',
+    # third party apps
+    'rest_framework',
+    'corsheaders',
+
+    
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -39,7 +46,38 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 ]
 
+#  jwt 관련 셋팅
+REST_FRAMEWORK = {   # 로그인 여부 확인해주는 클래스
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated', 
+    ),
+    'DEFAULT_AUTHENTICATION_CLASSES': (  # 인증 여부 확인하는 클래스
+        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.BasicAuthentication',
+    ),
+}
+
+JWT_AUTH = {
+    # 토큰을 암호화할 시크릿 키 등록, 절대 외부 노출 금지
+    'JWT_SECRET_KEY': SECRET_KEY,
+    'JWT_ALGORITHM': 'HS256',
+    'JWT_ALLOW_REFRESH': True,  # 다시 토큰 새로고침해서 받아가는것 가능(2주 짧다, 대신 자주 갱신)
+    'JWT_EXPIRATION_DELTA': datetime.timedelta(days=7),  # 토큰 유효기간 일주일, 원래는 5분
+    'JWT_REFRESH_EXPIRATION_DELTA': datetime.timedelta(days=28),  # 28일마다 토큰이 갱신(유효기간 연장시)
+    # 토큰 두 개 발행. 하나는 access토큰=접근가능, refresh토큰(access토큰을 발행하기 위한 토큰)=access토큰 발행시 이용
+}
+
+# CORS_ORIGIN_WHITELIST = [
+#     "http://localhost:8080",  # 뷰 서버
+#     "http://localhost:8081", 
+# ]
+
+CORS_ORIGIN_ALLOW_ALL = True  # open api사용할 때 어디서나 접근 가능
+
 MIDDLEWARE = [
+    # https://github.com/adamchainz/django-cors-headers
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -118,3 +156,4 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
 STATIC_URL = '/static/'
+AUTH_USER_MODEL = 'todos.User'

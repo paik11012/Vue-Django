@@ -3,9 +3,11 @@
     <div id="nav">
       <router-link to="/">Home</router-link> |
       <router-link to="/login/">Login</router-link>
-      <!-- 특이한 것 존재!  -->
+
     </div>
-    <router-view/>
+    <div class="container col-6">
+      <router-view/>
+    </div>
   </div>
 </template>
 
