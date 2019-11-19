@@ -47,6 +47,7 @@ INSTALLED_APPS = [
 ]
 
 #  jwt 관련 셋팅
+#  vue함수로 들어가기 전 인증 및 로그인 여부를 확인해주는 세팅
 REST_FRAMEWORK = {   # 로그인 여부 확인해주는 클래스
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.IsAuthenticated', 
