@@ -29,6 +29,7 @@
 
 <script>
 import axios from 'axios' // axios설치 후 가져오기
+import router from '@/router'  // 로그인 후 홈으로 보내기 위해 가ㅈㅕ옴
 
 export default {
   name: 'LoginForm',
@@ -46,11 +47,16 @@ export default {
     login() {
       if (this.checkForm() ) {  // true
         this.loading = true
+        // http://127.0.0.1:8000
         const SERVER_IP = process.env.VUE_APP_SERVER_IP
-        axios.get(SERVER_IP, this.credentials)  // 여기가 중요!!!!!!!!!!!
+        axios.post(SERVER_IP + '/api-token-auth/', this.credentials)  // 여기가 중요!!!!!!!!!!!
         .then(response => {
-          console.log(response)
-          this.loading = false  // 비동기적이기에 두 번 넣어주어야 함
+          // 세션을 이용하겠다
+          this.$session.start()  // 초기화
+          this.$session.set('jwt', response.data.token) // 응답 결과를 세션에 저장(key, value)
+          this.loading = false
+          router.push('/')  // vue router를 통해 어디로 보낼건지 주소 적기(홈)
+
         })
         .catch(error => {
           console.error(error)
