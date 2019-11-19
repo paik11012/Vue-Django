@@ -11,7 +11,7 @@ User = get_user_model()
 def todo_create(request):
     # request.data는 axios의 body로 전달한 데이터
     serializer = TodoSerializer(data=request.data)
-    if serializer.is_valid(aise_exception=True):
+    if serializer.is_valid(raise_exception=True):
         serializer.save()
         return Response(serializer.data) # 사용자가 새로 작성한 데이터 응답
 

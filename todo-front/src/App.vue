@@ -8,7 +8,7 @@
         <!-- prevent를 사용하는 이유는 herf로 리다이렉트를 방지하기 위함 -->
       </div>
       <div v-else>
-        <router-link to="/login/">Login</router-link> 
+        <router-link to="/login">Login</router-link> 
       </div>
 
     </div>
