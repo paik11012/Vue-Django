@@ -54,6 +54,11 @@ export default {
           // 세션을 이용하겠다
           this.$session.start()  // 초기화
           this.$session.set('jwt', response.data.token) // 응답 결과를 세션에 저장(key, value)
+
+          // vuex store등록
+          this.$store.dispatch('login', response.data.token)
+          
+
           this.loading = false
           router.push('/')  // vue router를 통해 어디로 보낼건지 주소 적기(홈)
 

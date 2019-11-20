@@ -22,21 +22,35 @@
 import router from '@/router'
 export default {
   name: 'App',
-  data() {
-    return {
-      isLoggedIn: this.$session.has('jwt')
+  computed: {
+    isLoggedIn() {  // state의 토큰값이 바뀌면 >> updated 필요 없다
+      return this.$store.getters.isLoggedIn
     }
+  },
+  // data() {
+  //   return {
+  //     isLoggedIn: this.$session.has('jwt')
+  //   }
+  // },
+  // 최상위 app이 렌더링되면 실행하는 함수
+  mounted() {
+    if(this.$session.has('jwt')) {
+      const token = this.$session.get('jwt')
+      this.$store.dispatch('login', token) // jwt있으면 토큰값 저장(자동로그인)
+    }
+
   },
   methods: {
     logout() {
       this.$session.destroy()
-      router.push('/login/')
+      this.$store.dispatch('logout')
+      router.push('/login')
     }
   },
   // data에 변화가 일어나는 시점에 실행하는 함수
-  updated() {
-    this.isLoggedIn = this.$session.has('jwt')
-  }
+  // updated() {
+  //   this.isLoggedIn = this.$session.has('jwt')
+  // }
 }
 </script>
 
